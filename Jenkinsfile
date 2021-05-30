@@ -1,30 +1,26 @@
 pipeline {
-    agent {
-        docker {
-            image 'node:12' 
-            args '-p 3000:3000' 
-        }
+  agent any
+ 
+  tools {nodejs "NodeJS"}
+ 
+  stages {
+        
+    stage('Cloning Git') {
+      steps {
+        git 'https://github.com/ashishjain16/simple-node-js-react-npm-app'
+      }
     }
-	 environment {
-        CI = 'true' 
+        
+    stage('Install dependencies') {
+      steps {
+        bat 'npm install'
+      }
     }
-    stages {
-        stage('Build') { 
-            steps {
-                sh 'npm install' 
-            }
-        }
-		stage('Test') { 
-            steps {
-                sh './jenkins/scripts/test.sh' 
-            }
-        }
-		 stage('Deliver') {
-            steps {
-                sh './jenkins/scripts/deliver.sh'
-                input message: 'Finished using the web site? (Click "Proceed" to continue)'
-                sh './jenkins/scripts/kill.sh'
-            }
-        }
-    }
+     
+    stage('Test') {
+      steps {
+         bat 'npm config ls'
+      }
+    }      
+  }
 }
